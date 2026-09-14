@@ -91,15 +91,33 @@ def _seconds(*texts: str, base: float = 1.8) -> float:
     return max(MIN_SECONDS, min(MAX_SECONDS, base + words / WORDS_PER_SECOND))
 
 
+_FONT_DIR = Path(__file__).resolve().parent.parent / "assets" / "fonts"
+
+
 def _font(size: int, bold: bool = True) -> ImageFont.FreeTypeFont:
+    """DejaVu нужного кегля.
+
+    Шрифт лежит в репозитории, в assets/fonts, и это не прихоть. Раньше
+    здесь был только путь /usr/share/fonts — линуксовый. На машине без
+    него функция молча возвращала load_default(), крошечный растровый
+    шрифт: ролик собирался без ошибки, но с нечитаемым текстом. Теперь
+    первым делом берём свой файл, он есть всегда; системные пути
+    (Linux, macOS, Windows) оставлены как запас, а если не нашлось
+    вообще ничего — громко предупреждаем, а не делаем вид, что всё хорошо.
+    """
+    name = "DejaVuSans-Bold.ttf" if bold else "DejaVuSans.ttf"
     paths = [
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf" if bold
-        else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        _FONT_DIR / name,
+        _FONT_DIR / "DejaVuSans.ttf",
+        Path("/usr/share/fonts/truetype/dejavu") / name,
+        Path("/Library/Fonts") / name,
+        Path("C:/Windows/Fonts") / name,
     ]
     for p in paths:
-        if Path(p).exists():
-            return ImageFont.truetype(p, size)
+        if p.exists():
+            return ImageFont.truetype(str(p), size)
+    print(f"ВНИМАНИЕ: шрифт {name} не найден, текст будет нечитаемым. "
+          f"Положи DejaVu в {_FONT_DIR}")
     return ImageFont.load_default()
 
 
