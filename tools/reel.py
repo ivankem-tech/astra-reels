@@ -803,7 +803,7 @@ def _segment(content: Image.Image | list[Image.Image], seconds: float,
 # продвижение, а часть бесплатных библиотек зарегистрирована в YouTube
 # Content ID — заявка прилетает даже на бесплатный трек.
 MUSIC = (Path(__file__).resolve().parent.parent
-         / "Астра ролики" / "музыка" / "астра_рассвет.wav")
+         / "assets" / "music" / "астра_рассвет.wav")
 
 # Поправка громкости — именно поправка, а не целевой уровень. Трек уже
 # нормализован в tools/music.py на -20 дБ RMS; первая версия применяла
