@@ -1,2 +1,4 @@
 Pillow
 numpy
+opencv-python
+python-dateutil
